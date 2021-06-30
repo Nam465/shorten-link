@@ -5,10 +5,9 @@ const env = require('../../env')
 const { UrlModel } = require('../mongo/documents')
 
 const _url_collection = _db._url_collection
-const _key_collection = _db._key_collection
 const HOST = env.HOST
 
-class Url {
+class ShortLink {
 
     async createUrl(
         userId,
@@ -42,16 +41,14 @@ class Url {
         return resource
     }
 
-    async deleteUrl(hash) {
+    async delete(hash) {
         /* remove url */
         await _url_collection.deleteOne(
             { _id: { $eq: hash} }
         )
         /* release key */
-        await _key_collection.updateOne(
-            { _id: { $eq: hash} },
-            { $set: { available: hash } }
-        )
+        let okg = new Okr()
+        await okg.releaseKey(hash)
     }
 
     findResourceLink(hash) {
@@ -61,4 +58,4 @@ class Url {
 
 }
 
-module.exports = Url
+module.exports = ShortLink

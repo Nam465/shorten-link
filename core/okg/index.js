@@ -21,11 +21,14 @@ class OKG {
         return cursor.value._id
     }
 
-    async releaseKey() {
+    async releaseKey(hash) {
         /*
-        1) Delete Url document connect with row
-        2) Update feild available of key to true
+        1) Update feild available of key to true
         */
+        await _key_collection.updateOne(
+            { _id: { $eq: hash} },
+            { $set: { available: hash } }
+        )
 
     }
 

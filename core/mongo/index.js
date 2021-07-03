@@ -3,10 +3,12 @@ const uri = "mongodb+srv://mongo_namluong:mongo_namluong@cluster0.zrhm7.mongodb.
 const DB_NAME = 'MIN_LINK_PROJECT'
 const KEY_COLECTION = 'KEY_DB'
 const URL_COLLECTION = 'URL_DB'
+const USER_COLLECTION = 'USER_DB'
 
 let _db = null
 let _key_collection = null
 let _url_collection = null
+let _user_collection = null
 
 const client = new MongoClient(
     uri,
@@ -21,11 +23,13 @@ const mongoUlti = {
     _db,
     _key_collection,
     _url_collection,
+    _user_collection,
     connect: async () => {
         await client.connect()
         mongoUlti._db = client.db(DB_NAME)
         mongoUlti._key_collection = mongoUlti._db.collection(KEY_COLECTION)
         mongoUlti._url_collection = mongoUlti._db.collection(URL_COLLECTION)
+        mongoUlti._user_collection = mongoUlti._db.collection(USER_COLLECTION)
     },
 }
 

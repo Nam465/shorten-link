@@ -33,7 +33,20 @@ class UrlModel {
 }
 
 class UserModel {
-    
+    constructor(
+        Avatar,
+        Email,
+        FacebookID,
+        FullName,
+    ) 
+    {
+        this.Avatar = Avatar
+        this.Email = Email
+        this.FacebookID = FacebookID
+        this.FullName = FullName
+        this.CreatedAt = Date.now()
+
+    }
 }
 
 module.exports = {

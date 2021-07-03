@@ -5,40 +5,74 @@ var axios = require('axios')
 const _db = require('../core/mongo')
 const _url_collection = _db._url_collection
 const _user_collection = _db._user_collection
+const jwt = require('jsonwebtoken')
+const env = require('../env')
+const { UserModel } = require('../core/mongo/documents')
+
 
 /* GET users listing. */
-router.get('/login', async (req, res, next) => {
-  try {
-    /* User token */
-    const token = 'EAAEtaZB04qzABAFJcwp32sCD7A6P2MfK1PYVohvyC0UX66rZB4tebzUb9zAzc8fpCgZCQKeqC6069QXTiNrLngxHiRAskcjcNzKSiIOsJ9byK11I6BSer9oiuk1baU24ZA4ySrYcR6FyTgUVN47MBhdbdAyOQfsdzo2wrRUCmZAPSZCRYn4jHKKq6i6m3F1d5ZC1yFe8uiYozHbIh66VdfN'
-    const user_id = '103779895306735'
+router.get('/authenticate-with-fb', async (req, res, next) => {
+	try {
+		/* User token */
+		const fb_token = 'EAAEtaZB04qzABAOwcafBDjmp2ncoIY297n2ZBghcxsOpeEXrMUfiwkfmY6GOBdChDYC72GvA33dnvhZA6UBSCsUlRjpSG0XasBaG1CdK34fMvPu8NLFmPrDKxUlPUdjm4eHW60ZAU0GGHnW9l00ZCffnuTYOKA9LEHfSkfBcNKSsh0wUbOUMWddSsKA7rhM90piTfuVMj8jZCLMythxEsL'
+		const fb_user_id = '103779895306735'
 
-    /* Search user information from Fb */
-    let endpoint = `https://graph.facebook.com/${user_id}?access_token=${token}&fields=birthday,email,hometown,name,picture`
-    let user_fb = await axios.get(endpoint)
-    let status = user_fb.status
-    if (status != '200')
-      throw new Error('Fb status code is bad')
-    let data = user_fb.data
-    let id = user_fb.id
-    let fullName = user_fb.userName
-    let email = user_fb.email
-    let avatar = user_fb.picture.data.url
+		/* Search user information from Fb */
+		let endpoint = `https://graph.facebook.com/${fb_user_id}?access_token=${fb_token}&fields=birthday,email,hometown,name,picture`
+		let fb_user = await axios.get(endpoint)
+		let status = fb_user.status
 
-    /* Use user email to search in our DB */
+		/* Authenticate fb token */
+		if (status != '200') {
+			res.status(400)
+			throw new Error('Fb status code is bad')
+		}
 
-    
-    console.log(data);
+		let data = fb_user.data
+		let fullName = data.name
+		let email = data.email
+		let avatar = data.picture.data.url
 
-    res.send('respond with a resource');
-  } catch (error) {
-    res.send({
-      error: error.name,
-      message: error.message
-    })
-  }
+		/* Find User in our DB , if not then create one base on id */
+		const user_information = await _user_collection.findOne(
+			{ FacebookID: { $eq: fb_user_id } }
+		)
+		let _id = null
 
+		if (!user_information) {
+			const user = new UserModel(
+				avatar,
+				email,
+				fb_user_id,
+				fullName
+			)
+			const new_user_information = await _user_collection.insertOne(user)
+			_id = new_user_information.insertedId
+		} else
+			_id = user_information._id
 
+		/* Create token */
+		const expiresIn = '90 days'
+		const jwt_token = jwt.sign(
+			{ _id },
+			env.APP_SECRET,
+			{ expiresIn }
+		)
+
+		res.json({
+			expiresIn,
+			jwt: jwt_token
+		})
+	} catch (error) {
+		if (res.statusCode == 200)
+			res.status(500)
+		res.send({
+			error: error.name,
+			message: error.message
+		})
+	}
 });
+
+
 
 module.exports = router;

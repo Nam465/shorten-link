@@ -14,7 +14,7 @@ const { UserModel } = require('../core/mongo/documents')
 router.get('/authenticate-with-fb', async (req, res, next) => {
 	try {
 		/* User token */
-		const fb_token = 'EAAEtaZB04qzABAOwcafBDjmp2ncoIY297n2ZBghcxsOpeEXrMUfiwkfmY6GOBdChDYC72GvA33dnvhZA6UBSCsUlRjpSG0XasBaG1CdK34fMvPu8NLFmPrDKxUlPUdjm4eHW60ZAU0GGHnW9l00ZCffnuTYOKA9LEHfSkfBcNKSsh0wUbOUMWddSsKA7rhM90piTfuVMj8jZCLMythxEsL'
+		const fb_token = 'EAAEtaZB04qzABACUW8sPLSuobp4ZC1Fr1Axqmk7ijkRB1EodEWcbQZBD0b6H6tWZAVZC6qIkAdJTfipO5nxyMI6wAuRYRKXm3FBhm0kGM0Os6TeaEDlZA8o3nggBlG27Q0ACy5hfE9OrCZC6TWEj4dErK52GOcnYcT11ZCGmEaf2sfoNZAU5Q8A4jfkVZAqcwIHn9gNt9Ej3yVHalruBPFCoZAP'
 		const fb_user_id = '103779895306735'
 
 		/* Search user information from Fb */

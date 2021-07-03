@@ -62,7 +62,6 @@ router.post(
     }
 )
 
-
 router.delete('/:hash', async (req, res, next) => {
     try {
         /* Check permision */
@@ -168,6 +167,55 @@ router.get('/all', async (req, res, next) => {
         })
     }
 
+})
+
+router.get('/:hash', async (req, res, next) => {
+    try {
+        /* Input */
+        const hash = req.params.hash
+        const bearerToken = req.get('Authorization')
+
+        /*  
+            Verify input
+            - if url have no owner => anyone can read
+            - else user must own it
+        */
+        const url = await _url_collection.findOne(
+            { _id: { $eq: hash } }
+        )
+
+        if (url.userId) {
+            if (!bearerToken) {
+                res.status(401)
+                throw new Error('No permision')
+            }
+
+            if (bearerToken) {
+                const token = bearerToken.slice(7)
+                const payload = jwt.verify(token, env.APP_SECRET)
+                const _id = payload._id
+        
+                if (_id != url.userId) {
+                    res.status(401)
+                    throw new Error('No permision')
+                }
+            }
+
+        }
+
+        /* Return data */
+        res.json(url)
+
+
+    } catch (e) {
+        if (res.statusCode == 200)
+            res.status(500)
+
+        res.json({
+            error: e.name,
+            message: e.message
+        })
+    }
 })
 
 module.exports = router;

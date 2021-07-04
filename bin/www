@@ -9,6 +9,7 @@ const mongoUlti = require('../core/mongo')
 mongoUlti.connect()
   .then(() => {
 
+    require('dotenv').config()
     var app = require('../app');
     var debug = require('debug')('express-app:server');
     var http = require('http');

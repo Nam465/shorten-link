@@ -8,7 +8,6 @@ const _db = require('../core/mongo')
 const _url_collection = _db._url_collection
 const _user_collection = _db._user_collection
 const jwt = require('jsonwebtoken')
-const env = require('../env');
 
 router.post(
     '/',
@@ -33,7 +32,7 @@ router.post(
             let _id = null
             if (bearerToken) {
                 const token = bearerToken.slice(7)
-                const payload = jwt.verify(token, env.APP_SECRET)
+                const payload = jwt.verify(token, process.env.APP_SECRET)
                 _id = payload._id
             }
 
@@ -72,7 +71,7 @@ router.delete('/:hash', async (req, res, next) => {
             throw new Error('No permision')
         }
         const token = bearerToken.slice(7)
-        const payload = jwt.verify(token, env.APP_SECRET)
+        const payload = jwt.verify(token,  process.env.APP_SECRET)
         const _id = payload._id
 
         const url = await _url_collection.findOne(
@@ -131,7 +130,7 @@ router.get('/all', async (req, res, next) => {
             throw new Error('No permision')
         }
         const token = bearerToken.slice(7)
-        const payload = jwt.verify(token, env.APP_SECRET)
+        const payload = jwt.verify(token,  process.env.APP_SECRET)
         const _id = payload._id
 
         /* Retrive from DB */
@@ -192,7 +191,7 @@ router.get('/:hash', async (req, res, next) => {
 
             if (bearerToken) {
                 const token = bearerToken.slice(7)
-                const payload = jwt.verify(token, env.APP_SECRET)
+                const payload = jwt.verify(token,  process.env.APP_SECRET)
                 const _id = payload._id
         
                 if (_id != url.userId) {

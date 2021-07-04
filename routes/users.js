@@ -6,7 +6,6 @@ const _db = require('../core/mongo')
 const _url_collection = _db._url_collection
 const _user_collection = _db._user_collection
 const jwt = require('jsonwebtoken')
-const env = require('../env')
 const { UserModel } = require('../core/mongo/documents')
 
 
@@ -55,7 +54,7 @@ router.get('/authenticate-with-fb', async (req, res, next) => {
 		const expiresIn = '90 days'
 		const jwt_token = jwt.sign(
 			{ _id },
-			env.APP_SECRET,
+			process.env.APP_SECRET,
 			{ expiresIn }
 		)
 

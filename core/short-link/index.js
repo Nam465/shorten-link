@@ -1,11 +1,10 @@
 
 const _db = require('../mongo/index')
 const Okr = require('../okg')
-const env = require('../../env')
 const { UrlModel } = require('../mongo/documents')
 
 const _url_collection = _db._url_collection
-const HOST = env.HOST
+const HOST = process.env.HOST
 
 class ShortLink {
 

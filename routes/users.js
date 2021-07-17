@@ -13,8 +13,8 @@ const { UserModel } = require('../core/mongo/documents')
 router.get('/authenticate-with-fb', async (req, res, next) => {
 	try {
 		/* User token */
-		const fb_token = 'EAAEtaZB04qzABACUW8sPLSuobp4ZC1Fr1Axqmk7ijkRB1EodEWcbQZBD0b6H6tWZAVZC6qIkAdJTfipO5nxyMI6wAuRYRKXm3FBhm0kGM0Os6TeaEDlZA8o3nggBlG27Q0ACy5hfE9OrCZC6TWEj4dErK52GOcnYcT11ZCGmEaf2sfoNZAU5Q8A4jfkVZAqcwIHn9gNt9Ej3yVHalruBPFCoZAP'
-		const fb_user_id = '103779895306735'
+		const fb_token = req.get('Authorization')
+		const fb_user_id = req.query.fb_user_id
 
 		/* Search user information from Fb */
 		let endpoint = `https://graph.facebook.com/${fb_user_id}?access_token=${fb_token}&fields=birthday,email,hometown,name,picture`
@@ -60,7 +60,12 @@ router.get('/authenticate-with-fb', async (req, res, next) => {
 
 		res.json({
 			expiresIn,
-			jwt: jwt_token
+			jwt: jwt_token,
+			user: {
+				fullName,
+				email,
+				avatar,
+			}
 		})
 	} catch (error) {
 		if (res.statusCode == 200)

@@ -27,10 +27,9 @@ router.post(
 
 
             /* Find user _id , If token not exsit just pass */
-            const bearerToken = req.get('Authorization')
+            const token = req.get('Authorization')
             let _id = null
-            if (bearerToken) {
-                const token = bearerToken.slice(7)
+            if (token) {
                 const payload = jwt.verify(token, process.env.APP_SECRET)
                 _id = payload._id
             }
@@ -64,12 +63,11 @@ router.delete('/:hash', async (req, res, next) => {
     try {
         /* Check permision */
         const hash = req.params.hash
-        const bearerToken = req.get('Authorization')
-        if (!bearerToken) {
+        const token = req.get('Authorization')
+        if (!token) {
             res.status(401)
             throw new Error('No permision')
         }
-        const token = bearerToken.slice(7)
         const payload = jwt.verify(token,  process.env.APP_SECRET)
         const _id = payload._id
 
@@ -123,12 +121,11 @@ router.get('/all', async (req, res, next) => {
         }
 
         /* Verify token */
-        const bearerToken = req.get('Authorization')
-        if (!bearerToken) {
+        const token = req.get('Authorization')
+        if (!token) {
             res.status(401)
             throw new Error('No permision')
         }
-        const token = bearerToken.slice(7)
         const payload = jwt.verify(token,  process.env.APP_SECRET)
         const _id = payload._id
 
@@ -172,7 +169,7 @@ router.get('/:hash', async (req, res, next) => {
     try {
         /* Input */
         const hash = req.params.hash
-        const bearerToken = req.get('Authorization')
+        const token = req.get('Authorization')
 
         /*  
             Verify input
@@ -184,13 +181,12 @@ router.get('/:hash', async (req, res, next) => {
         )
 
         if (url.userId) {
-            if (!bearerToken) {
+            if (!token) {
                 res.status(401)
                 throw new Error('No permision')
             }
 
-            if (bearerToken) {
-                const token = bearerToken.slice(7)
+            if (token) {
                 const payload = jwt.verify(token,  process.env.APP_SECRET)
                 const _id = payload._id
         

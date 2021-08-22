@@ -7,6 +7,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var shortLinkRouter = require('./routes/short-link')
 var bodyParser = require('body-parser')
+var cors = require('cors')
 
 var app = express();
 

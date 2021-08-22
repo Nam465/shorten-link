@@ -24,7 +24,6 @@ router.post(
             let originUrl = body.originUrl
             let expire = body.expire
             let optionalKey = body.optionalKey
-            let userToken = body.userToken
 
 
             /* Find user _id , If token not exsit just pass */
@@ -48,7 +47,7 @@ router.post(
                 expire
             )
 
-            res.json({ resourceLink })
+            res.json(resourceLink)
         } catch (e) {
             console.log(e.message);
             if (res.statusCode == 200)
@@ -145,6 +144,7 @@ router.get('/all', async (req, res, next) => {
         const items = await _url_collection.find(
             { userId: { $eq: _id } }
         )
+        .sort({createdAt: -1})
         .limit(limit)
         .skip(skip)
         .toArray()

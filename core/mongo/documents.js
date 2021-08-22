@@ -38,6 +38,7 @@ class UserModel {
         Email,
         FacebookID,
         FullName,
+        Password,
     ) 
     {
         this.Avatar = Avatar
@@ -45,7 +46,7 @@ class UserModel {
         this.FacebookID = FacebookID
         this.FullName = FullName
         this.CreatedAt = Date.now()
-
+        this.Password = Password
     }
 }
 

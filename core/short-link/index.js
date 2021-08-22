@@ -26,7 +26,7 @@ class ShortLink {
 
         /* Mongodb auto check duplicate key */
         await _url_collection.insertOne(url)
-        return this.findResourceLink(url._id)
+        return url
 
     }
 
